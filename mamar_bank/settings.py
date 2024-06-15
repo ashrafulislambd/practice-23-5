@@ -131,4 +131,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'imdashraful17@gmail.com'
-EMAIL_HOST_PASSWORD = 'ndeiqaxlqvsnjzba'
+EMAIL_HOST_PASSWORD = ''
