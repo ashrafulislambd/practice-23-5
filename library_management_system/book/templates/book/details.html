@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mx-auto">
+        <div class="flex m-4">
+            <img width="300px" src={{ book.image.url }} />
+            <div class="p-4">
+                <h2 class="text-3xl font-bold mb-3">{{ book.title }}</h2>
+                <p class="text-lg mb-16">{{ book.description }}</p>
+                <span>Borrowing Price: <b>{{ book.borrowing_price }}$</b></span><br/>
+                <span>Category: <b>{{ book.get_category_display }}</b></span>
+
+                {% if user.is_authenticated %}
+                    {% if can_borrow %}
+                        <form method="POST" action="{% url 'borrow' %}">
+                            {% csrf_token %}
+                            <input type="hidden" id="book_id" name="book_id" value="{{ book.id }}" /><br/>
+                            <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="submit">Borrow</button>
+                        </form>
+                    {% else %}
+                        <p><b>You cannot borrow this book because {{ why }}</b></p>
+                    {% endif %}
+                {% else %}
+                    <p>You must login or create an account to borrow this book</p>
+                {% endif %}
+            </div>
+        </div>
+
+        
+
+        <h2 class="text-2xl font-bold">Reviews</h2>
+        {% for review in reviews %}
+        <article>
+            <div class="flex items-center mb-4">
+                <!-- <img class="w-10 h-10 me-4 rounded-full" src="/docs/images/people/profile-picture-5.jpg" alt=""> -->
+                <div class="font-medium dark:text-white">
+                    <p>{{ review.user.first_name }} {{ review.user.last_name }} <time datetime="2014-08-16 19:00" class="block text-sm text-gray-500 dark:text-gray-400">Joined {{ user.date_joined | timesince }} ago</time></p>
+                </div>
+            </div>
+            <div class="flex items-center mb-1 space-x-1 rtl:space-x-reverse">
+                {{ review.get_rating_display }}
+                <h3 class="ms-2 text-sm font-semibold text-gray-900 dark:text-white">{{ review.rating }}.0/5.0</h3>
+            </div>
+            <footer class="mb-5 text-sm text-gray-500 dark:text-gray-400"><p>Reviewed <time datetime="2017-03-03 19:00">{{ review.timestamp | timesince }}</time> ago</p></footer>
+            <p class="mb-2 text-gray-500 dark:text-gray-400">{{ review.review }}</p>
+        </article>
+        {% endfor %}
+        {% if user.is_authenticated %}
+            <form class="max-w-md mx-auto" method="POST">
+                Leave a Review
+                {% if review_form.non_field_errors %}
+                    <div class="font-bold text-red-700">
+                        {{ review_form.non_field_errors }}
+                    </div>
+                {% endif %}
+                {% csrf_token %}
+                <div class="mb-5">
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="review">Review</label>
+                    <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="review" required></textarea>
+                </div>
+                <label for="rating">
+                <div class="rating">
+                    <input type="radio" name="rating" class="mask mask-star-2 bg-orange-400" value="1" checked />
+                    <input type="radio" name="rating" class="mask mask-star-2 bg-orange-400" value="2" />
+                    <input type="radio" name="rating" class="mask mask-star-2 bg-orange-400" value="3" />
+                    <input type="radio" name="rating" class="mask mask-star-2 bg-orange-400" value="4" />
+                    <input type="radio" name="rating" class="mask mask-star-2 bg-orange-400" value="5" />
+                </div><br/>
+                <button class="mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="submit">Review</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

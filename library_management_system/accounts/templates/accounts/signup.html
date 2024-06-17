@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form class="max-w-md mx-auto [&_input]:bg-gray-50 [&_input]:border [&_input]:border-gray-300 [&_input]:text-gray-900 [&_input]:text-sm [&_input]:rounded-lg 
+[&_input]:focus:ring-blue-500 [&_input]:focus:border-blue-500 [&_input]:block [&_input]:w-full [&_input]:p-2.5 [&_input]:dark:bg-gray-700 [&_input]:dark:border-gray-600 [&_input]:dark:placeholder-gray-400 
+[&_input]:dark:text-white [&_input]:dark:focus:ring-blue-500 [&_input]:dark:focus:border-blue-500" method="POST">
+        <h2 class="text-2xl font-bold text-center">Sign Up</h2>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="mt-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="submit">Sign Up</button>
+    </form>
+{% endblock %}

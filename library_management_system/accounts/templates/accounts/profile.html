@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="max-w-2xl mx-auto">
+        <h2 class="text-2xl font-bold mb-3">Profile</h2>
+        <div>  
+            <span><b>Name:</b> {{ user.first_name }} {{ user.last_name }}</span><br/>
+            <span><b>Email:</b> {{ user.email }}</span><br/>
+        </div>
+        <h2 class="text-2xl font-bold mb-3">Transactions</h2>
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">ID</th>
+                    <th scope="col" class="px-6 py-3">Name</th>
+                    <th scope="col" class="px-6 py-3">Borrowing Price</th>
+                    <th scope="col" class="px-6 py-3">Balance After Transaction</th>
+                    <th scope="col" class="px-6 py-3">Transaction Type</th>
+                    <th scope="col" class="px-6 py-3">Date & Time of Transaction</th>
+                    <th scope="col" class="px-6 py-3">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ transaction.id }}</td>
+                        <td class="px-6 py-4">{{ transaction.book.title }}</td>
+                        <td class="px-6 py-4">{{ transaction.book.borrowing_price }}$</td>
+                        <td class="px-6 py-4">{{ transaction.balance_after_transaction }}</td>
+                        <td class="px-6 py-4">{{ transaction.get_mode_display }}</td>
+                        <td class="px-6 py-4">{{ transaction.timestamp }}</td>
+                        <td>
+                            {% if transaction.mode == 0 %}
+                                <form action="{% url 'return' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" id="book_id" name="book_id" value="{{ transaction.book.id }}" />
+                                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" type="submit">Return</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
